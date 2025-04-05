@@ -16,6 +16,8 @@ This project is a **web-based machine learning application** that predicts house
 - **ML Libraries**: Pandas, NumPy, Scikit-learn, Joblib
 - **Dataset**: [Chennai House Price Prediction - Kaggle](https://www.kaggle.com/datasets/)
 
+- **Replace the house_price_model.pkl file after build the new model using pynb file.**
+
 ## Setup Instructions
 
 ### 1. Clone the Repository
@@ -37,3 +39,4 @@ house-price-prediction/
 ├── app.py                     # Flask backend
 ├── requirements.txt           # Dependencies
 ├── README.md                  # Project documentation
+
