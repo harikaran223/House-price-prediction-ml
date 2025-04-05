@@ -1,0 +1,218 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.preprocessing import LabelEncoder\n",
+        "from sklearn.impute import SimpleImputer\n",
+        "from sklearn.ensemble import RandomForestRegressor\n",
+        "from sklearn.metrics import mean_absolute_error\n",
+        "\n",
+        "# Load dataset\n",
+        "file_path = \"train-chennai-sale.csv\"\n",
+        "df = pd.read_csv(file_path)\n",
+        "\n",
+        "# Selecting relevant features\n",
+        "features = ['INT_SQFT', 'N_BEDROOM', 'N_BATHROOM', 'N_ROOM', 'SALE_COND',\n",
+        "            'PARK_FACIL', 'BUILDTYPE', 'UTILITY_AVAIL', 'STREET', 'MZZONE',\n",
+        "            'QS_ROOMS', 'QS_BATHROOM', 'QS_BEDROOM', 'QS_OVERALL']\n",
+        "\n",
+        "target = 'SALES_PRICE'\n",
+        "\n",
+        "# Dropping rows with missing target values\n",
+        "df_cleaned = df.dropna(subset=[target])\n",
+        "\n",
+        "# Separate numerical and categorical columns\n",
+        "num_cols = ['INT_SQFT', 'N_BEDROOM', 'N_BATHROOM', 'N_ROOM', 'QS_ROOMS', 'QS_BATHROOM', 'QS_BEDROOM', 'QS_OVERALL']\n",
+        "cat_cols = ['SALE_COND', 'PARK_FACIL', 'BUILDTYPE', 'UTILITY_AVAIL', 'STREET', 'MZZONE']\n",
+        "\n",
+        "# Impute missing values\n",
+        "num_imputer = SimpleImputer(strategy=\"median\")\n",
+        "cat_imputer = SimpleImputer(strategy=\"most_frequent\")\n",
+        "\n",
+        "df_cleaned[num_cols] = num_imputer.fit_transform(df_cleaned[num_cols])\n",
+        "df_cleaned[cat_cols] = cat_imputer.fit_transform(df_cleaned[cat_cols])\n",
+        "\n",
+        "# Encode categorical variables\n",
+        "label_encoders = {}\n",
+        "for col in cat_cols:\n",
+        "    le = LabelEncoder()\n",
+        "    df_cleaned[col] = le.fit_transform(df_cleaned[col])\n",
+        "    label_encoders[col] = le\n",
+        "\n",
+        "# Splitting data\n",
+        "X = df_cleaned[features]\n",
+        "y = df_cleaned[target]\n",
+        "\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n",
+        "\n",
+        "# Model training\n",
+        "model = RandomForestRegressor(n_estimators=100, random_state=42)\n",
+        "model.fit(X_train, y_train)\n",
+        "\n",
+        "# Model evaluation\n",
+        "y_pred = model.predict(X_test)\n",
+        "mae = mean_absolute_error(y_test, y_pred)\n",
+        "print(f\"Mean Absolute Error: {mae}\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "qbmOqTje8vUi",
+        "outputId": "071f4c72-460b-4734-a6f7-478743cc5dfd"
+      },
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Mean Absolute Error: 578949.1082981715\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import joblib\n",
+        "\n",
+        "# Save the trained model\n",
+        "joblib.dump(model, \"house_price_model.pkl\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "hasnZwvj-Xvs",
+        "outputId": "fdac7cab-85eb-4cc6-b838-12d067cc44b9"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "['house_price_model.pkl']"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 3
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "loaded_model = joblib.load(\"house_price_model.pkl\")\n",
+        "\n",
+        "# Use the loaded model for predictions\n",
+        "y_pred = loaded_model.predict(X_test)\n"
+      ],
+      "metadata": {
+        "id": "H8wAuJrA-8ya"
+      },
+      "execution_count": 6,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from google.colab import files\n",
+        "files.download(\"house_price_model.pkl\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 17
+        },
+        "id": "g-52udEe_Cz1",
+        "outputId": "15a4688f-8b04-4961-ea9e-4ebbed93504d"
+      },
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<IPython.core.display.Javascript object>"
+            ],
+            "application/javascript": [
+              "\n",
+              "    async function download(id, filename, size) {\n",
+              "      if (!google.colab.kernel.accessAllowed) {\n",
+              "        return;\n",
+              "      }\n",
+              "      const div = document.createElement('div');\n",
+              "      const label = document.createElement('label');\n",
+              "      label.textContent = `Downloading \"${filename}\": `;\n",
+              "      div.appendChild(label);\n",
+              "      const progress = document.createElement('progress');\n",
+              "      progress.max = size;\n",
+              "      div.appendChild(progress);\n",
+              "      document.body.appendChild(div);\n",
+              "\n",
+              "      const buffers = [];\n",
+              "      let downloaded = 0;\n",
+              "\n",
+              "      const channel = await google.colab.kernel.comms.open(id);\n",
+              "      // Send a message to notify the kernel that we're ready.\n",
+              "      channel.send({})\n",
+              "\n",
+              "      for await (const message of channel.messages) {\n",
+              "        // Send a message to notify the kernel that we're ready.\n",
+              "        channel.send({})\n",
+              "        if (message.buffers) {\n",
+              "          for (const buffer of message.buffers) {\n",
+              "            buffers.push(buffer);\n",
+              "            downloaded += buffer.byteLength;\n",
+              "            progress.value = downloaded;\n",
+              "          }\n",
+              "        }\n",
+              "      }\n",
+              "      const blob = new Blob(buffers, {type: 'application/binary'});\n",
+              "      const a = document.createElement('a');\n",
+              "      a.href = window.URL.createObjectURL(blob);\n",
+              "      a.download = filename;\n",
+              "      div.appendChild(a);\n",
+              "      a.click();\n",
+              "      div.remove();\n",
+              "    }\n",
+              "  "
+            ]
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<IPython.core.display.Javascript object>"
+            ],
+            "application/javascript": [
+              "download(\"download_c264e76b-74a3-43f6-a56a-b57250233da9\", \"house_price_model.pkl\", 51794417)"
+            ]
+          },
+          "metadata": {}
+        }
+      ]
+    }
+  ]
+}
