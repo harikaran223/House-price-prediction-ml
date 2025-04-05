@@ -23,3 +23,17 @@ This project is a **web-based machine learning application** that predicts house
 ```bash
 git clone https://github.com/your-username/house-price-prediction.git
 cd house-price-prediction
+
+house-price-prediction/
+├── templates/
+│   └── index.html              # Frontend input form
+│
+├── static/
+│   └── style.css              # (Optional) CSS styles
+│
+├── model/
+│   └── model.pkl              # Trained ML model
+│
+├── app.py                     # Flask backend
+├── requirements.txt           # Dependencies
+├── README.md                  # Project documentation
