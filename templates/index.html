@@ -1,1 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chennai House Price Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .container { max-width: 800px; }
+        .form-group { margin-bottom: 1rem; }
+        h2 { color: #343a40; margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container mt-5 p-4 bg-white rounded shadow">
+        <h2 class="text-center">Chennai House Price Prediction</h2>
+        <form action="/predict" method="post">
+            <!-- Area (Dropdown) -->
+            <div class="form-group">
+                <label>Area:</label>
+                <select name="area" class="form-control" required>
+                    <option value="" disabled selected>Select Area</option>
+                    <option value="Anna Nagar">Anna Nagar</option>
+                    <option value="Adyar">Adyar</option>
+                    <option value="Velachery">Velachery</option>
+                    <option value="Chrompet">Chrompet</option>
+                    <option value="KK Nagar">KK Nagar</option>
+                    <option value="T Nagar">T Nagar</option>
+                    <option value="Karapakkam">Karapakkam</option>
+                </select>
+            </div>
 
+            <!-- Numeric Inputs -->
+            <div class="form-group">
+                <label>Square Feet:</label>
+                <input type="number" name="sqft" class="form-control" min="500" max="10000" required>
+            </div>
+            <div class="form-group">
+                <label>Bedrooms:</label>
+                <input type="number" name="bedrooms" class="form-control" min="1" max="5" required>
+            </div>
+            <div class="form-group">
+                <label>Bathrooms:</label>
+                <input type="number" name="bathrooms" class="form-control" min="1" max="4" required>
+            </div>
+            <div class="form-group">
+                <label>Rooms:</label>
+                <input type="number" name="rooms" class="form-control" min="1" max="10" required>
+            </div>
+
+            <!-- Sale Condition (Dropdown) -->
+            <div class="form-group">
+                <label>Sale Condition:</label>
+                <select name="sale_cond" class="form-control" required>
+                    <option value="" disabled selected>Select Condition</option>
+                    <option value="Normal Sale">Normal Sale</option>
+                    <option value="Ab Normal">Ab Normal</option>
+                    <option value="Partial">Partial</option>
+                    <option value="Family">Family</option>
+                    <option value="Adj Land">Adj Land</option>
+                </select>
+            </div>
+
+            <!-- Parking (Dropdown) -->
+            <div class="form-group">
+                <label>Parking Facility:</label>
+                <select name="parking" class="form-control" required>
+                    <option value="" disabled selected>Select Option</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <!-- Build Type (Dropdown) -->
+            <div class="form-group">
+                <label>Build Type:</label>
+                <select name="buildtype" class="form-control" required>
+                    <option value="" disabled selected>Select Type</option>
+                    <option value="Commercial">Commercial</option>
+                    <option value="House">House</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+
+            <!-- Utility (Dropdown) -->
+            <div class="form-group">
+                <label>Utility Availability:</label>
+                <select name="utility" class="form-control" required>
+                    <option value="" disabled selected>Select Utility</option>
+                    <option value="AllPub">AllPub (All Utilities)</option>
+                    <option value="NoSewer">NoSewer</option>
+                    <option value="ELO">ELO (Electricity Only)</option>
+                </select>
+            </div>
+
+            <!-- Street Type (Dropdown) -->
+            <div class="form-group">
+                <label>Street Type:</label>
+                <select name="street" class="form-control" required>
+                    <option value="" disabled selected>Select Type</option>
+                    <option value="Paved">Paved</option>
+                    <option value="Gravel">Gravel</option>
+                    <option value="No Access">No Access</option>
+                </select>
+            </div>
+
+            <!-- MZZONE (Dropdown) -->
+            <div class="form-group">
+                <label>MZZONE:</label>
+                <select name="mzzone" class="form-control" required>
+                    <option value="" disabled selected>Select Zone</option>
+                    <option value="RL">RL (Residential Low Density)</option>
+                    <option value="RM">RM (Residential Medium Density)</option>
+                    <option value="RH">RH (Residential High Density)</option>
+                    <option value="I">I (Industrial)</option>
+                    <option value="C">C (Commercial)</option>
+                    <option value="A">A (Agricultural)</option>
+                </select>
+            </div>
+
+            <!-- Age (Numeric) -->
+            <div class="form-group">
+                <label>Age (Years):</label>
+                <input type="number" name="age" class="form-control" min="1" max="100" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Predict Price</button>
+        </form>
+
+        <!-- Prediction Result -->
+        {% if prediction_text %}
+            <div class="alert alert-success mt-4">
+                <h4 class="text-center">{{ prediction_text }}</h4>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
